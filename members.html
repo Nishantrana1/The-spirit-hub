@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Members — The Spirit Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- Ambient particles canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Custom cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-aura" id="cursorAura"></div>
+
+    <!-- ===================== NAV ===================== -->
+    <header class="site-header" id="siteHeader">
+        <nav class="nav-inner">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">✦</span>
+                <span class="brand-text">The Spirit Hub</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#interests">Topics</a></li>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="index.html#events">Events</a></li>
+                <li><a href="members.html" class="active">Members</a></li>
+            </ul>
+            <button class="btn-join" id="joinBtn">Join the Hub</button>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#interests">Topics</a></li>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="index.html#events">Events</a></li>
+                <li><a href="members.html" class="active">Members</a></li>
+                <li><a href="index.html#cta">Join the Hub</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ===================== HERO / HEADER ===================== -->
+        <section class="members-hero">
+            <div class="hero-bg-text">DIRECTORY</div>
+            <div class="container reveal-fade">
+                <span class="section-tag">✦ The Community</span>
+                <h1 class="hero-title">
+                    Meet the<br />
+                    <em>Spirits</em>
+                </h1>
+                <p class="hero-subtitle">
+                    Explore the talented minds behind the code. Connect, collaborate, and build the future with fellow
+                    members.
+                </p>
+
+                <!-- Search and Filters -->
+                <div class="directory-toolbar">
+                    <div class="search-box">
+                        <span class="search-icon">⚲</span>
+                        <input type="text" placeholder="Search members by name, role, or skill..." id="memberSearch" />
+                    </div>
+                    <div class="filter-pills">
+                        <button class="filter-btn active">All</button>
+                        <button class="filter-btn">Engineering</button>
+                        <button class="filter-btn">Design</button>
+                        <button class="filter-btn">AI/ML</button>
+                        <button class="filter-btn">Open Source</button>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-orb"></div>
+        </section>
+
+        <!-- ===================== DIRECTORY GRID ===================== -->
+        <section class="members-directory section-pad">
+            <div class="container">
+                <div class="members-grid" id="membersGrid">
+
+                    <!-- Member 1 -->
+                    <div class="member-card reveal-up delay-1">
+                        <div class="member-cover cover-1"></div>
+                        <div class="member-info">
+                            <div class="member-avatar avatar-1">AR</div>
+                            <h3 class="member-name">Arjun Rao</h3>
+                            <p class="member-role">Senior Systems Engineer</p>
+                            <div class="member-tags">
+                                <span>#Rust</span>
+                                <span>#Distributed</span>
+                                <span>#OpenSource</span>
+                            </div>
+                            <p class="member-bio">Building fault-tolerant systems and contributing to the core
+                                infrastructure of the modern web.</p>
+                            <a href="#" class="member-link">View Profile →</a>
+                        </div>
+                    </div>
+
+                    <!-- Member 2 -->
+                    <div class="member-card reveal-up delay-2">
+                        <div class="member-cover cover-2"></div>
+                        <div class="member-info">
+                            <div class="member-avatar avatar-2">LM</div>
+                            <h3 class="member-name">Lena Müller</h3>
+                            <p class="member-role">AI Researcher & CTO</p>
+                            <div class="member-tags">
+                                <span>#MachineLearning</span>
+                                <span>#PyTorch</span>
+                                <span>#Ethics</span>
+                            </div>
+                            <p class="member-bio">Exploring the boundaries of large language models while ensuring
+                                alignment and transparency.</p>
+                            <a href="#" class="member-link">View Profile →</a>
+                        </div>
+                    </div>
+
+                    <!-- Member 3 -->
+                    <div class="member-card reveal-up delay-3">
+                        <div class="member-cover cover-3"></div>
+                        <div class="member-info">
+                            <div class="member-avatar avatar-3">KO</div>
+                            <h3 class="member-name">Kwame Osei</h3>
+                            <p class="member-role">Full-Stack Developer</p>
+                            <div class="member-tags">
+                                <span>#React</span>
+                                <span>#NodeJS</span>
+                                <span>#Web3</span>
+                            </div>
+                            <p class="member-bio">Bridging the gap between beautiful user interfaces and robust
+                                decentralized backends.</p>
+                            <a href="#" class="member-link">View Profile →</a>
+                        </div>
+                    </div>
+
+                    <!-- Member 4 -->
+                    <div class="member-card reveal-up delay-1">
+                        <div class="member-cover cover-4"></div>
+                        <div class="member-info">
+                            <div class="member-avatar avatar-4">SC</div>
+                            <h3 class="member-name">Sarah Chen</h3>
+                            <p class="member-role">UI/UX Architect</p>
+                            <div class="member-tags">
+                                <span>#DesignSystems</span>
+                                <span>#Figma</span>
+                                <span>#Accessibility</span>
+                            </div>
+                            <p class="member-bio">Crafting digital experiences that look beautiful and work seamlessly
+                                for everyone.</p>
+                            <a href="#" class="member-link">View Profile →</a>
+                        </div>
+                    </div>
+
+                    <!-- Member 5 -->
+                    <div class="member-card reveal-up delay-2">
+                        <div class="member-cover cover-5"></div>
+                        <div class="member-info">
+                            <div class="member-avatar avatar-5">DT</div>
+                            <h3 class="member-name">David Torres</h3>
+                            <p class="member-role">DevOps Specialist</p>
+                            <div class="member-tags">
+                                <span>#Kubernetes</span>
+                                <span>#AWS</span>
+                                <span>#CI/CD</span>
+                            </div>
+                            <p class="member-bio">Automating everything and making sure deployments happen on Friday
+                                without breaking a sweat.</p>
+                            <a href="#" class="member-link">View Profile →</a>
+                        </div>
+                    </div>
+
+                    <!-- Member 6 -->
+                    <div class="member-card reveal-up delay-3">
+                        <div class="member-cover cover-6"></div>
+                        <div class="member-info">
+                            <div class="member-avatar avatar-6">MJ</div>
+                            <h3 class="member-name">Maya Johnson</h3>
+                            <p class="member-role">Game Developer</p>
+                            <div class="member-tags">
+                                <span>#Unity</span>
+                                <span>#C#</span>
+                                <span>#Shaders</span>
+                            </div>
+                            <p class="member-bio">Creating immersive worlds and pushing the technical limits of
+                                real-time rendering.</p>
+                            <a href="#" class="member-link">View Profile →</a>
+                        </div>
+                    </div>
+
+                    <!-- Member 7 -->
+                    <div class="member-card reveal-up delay-1">
+                        <div class="member-cover cover-7"></div>
+                        <div class="member-info">
+                            <div class="member-avatar avatar-7">HW</div>
+                            <h3 class="member-name">Hiro Watanabe</h3>
+                            <p class="member-role">Security Researcher</p>
+                            <div class="member-tags">
+                                <span>#Cybersec</span>
+                                <span>#Cryptography</span>
+                                <span>#Pentesting</span>
+                            </div>
+                            <p class="member-bio">Finding vulnerabilities before the bad actors do. Always questioning
+                                system boundaries.</p>
+                            <a href="#" class="member-link">View Profile →</a>
+                        </div>
+                    </div>
+
+                    <!-- Member 8 -->
+                    <div class="member-card reveal-up delay-2">
+                        <div class="member-cover cover-8"></div>
+                        <div class="member-info">
+                            <div class="member-avatar avatar-8">AP</div>
+                            <h3 class="member-name">Aisha Patel</h3>
+                            <p class="member-role">Data Scientist</p>
+                            <div class="member-tags">
+                                <span>#Python</span>
+                                <span>#Analytics</span>
+                                <span>#Dataviz</span>
+                            </div>
+                            <p class="member-bio">Turning chaotic data streams into clear, actionable insights and
+                                beautiful visualizations.</p>
+                            <a href="#" class="member-link">View Profile →</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="pagination reveal-fade delay-3">
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <span class="page-dots">...</span>
+                    <button class="page-btn">148</button>
+                    <button class="page-btn next">Next →</button>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="brand">
+                        <span class="brand-icon">✦</span>
+                        <span class="brand-text">The Spirit Hub</span>
+                    </a>
+                    <p>A community for the curious, the driven, and the passionate minds of technology.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="index.html#interests">Topics</a></li>
+                        <li><a href="#">Projects</a></li>
+                        <li><a href="index.html#events">Events</a></li>
+                        <li><a href="#">Mentorship</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Knowledge Library</a></li>
+                        <li><a href="#">Job Board</a></li>
+                        <li><a href="#">Newsletter</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 The Spirit Hub. All rights reserved.</span>
+                <span>Built with ✦ for the curious minds of the world.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
