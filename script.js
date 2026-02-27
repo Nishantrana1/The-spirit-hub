@@ -200,9 +200,26 @@
 
 
 // ─── ANIMATED STAT COUNTERS ────────────────────────────────────
-(function initCounters() {
+(async function initCounters() {
   const statEls = document.querySelectorAll(".stat-value[data-target]");
   if (!statEls.length) return;
+
+  // Auto-sync member count from members page
+  try {
+    const membersEl = Array.from(statEls).find(
+      el => el.nextElementSibling?.textContent.trim() === "Members"
+    );
+    if (membersEl) {
+      const basePath = window.location.pathname.includes("/pages/")
+        ? "members.html"
+        : "pages/members.html";
+      const res = await fetch(basePath);
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const count = doc.querySelectorAll(".member-card").length;
+      if (count > 0) membersEl.dataset.target = count;
+    }
+  } catch (e) { /* fallback to hardcoded value */ }
 
   function animateCounter(el) {
     const target = parseInt(el.dataset.target, 10);
@@ -428,68 +445,443 @@
 })();
 
 
-// ─── MEMBER SEARCH & FILTERS ───────────────────────────────────
+// ─── MEMBER SEARCH, FILTERS & PAGINATION ────────────────────────
 (function initMemberDirectory() {
   const searchInput = document.getElementById("memberSearch");
   const filterBtns = document.querySelectorAll(".filter-btn");
-  const memberCards = document.querySelectorAll(".member-card");
-  if (!searchInput || !memberCards.length) return;
+  const allCards = Array.from(document.querySelectorAll(".member-card"));
+  const paginationEl = document.getElementById("membersPagination");
+  if (!searchInput || !allCards.length) return;
 
-  // Category mapping for filter buttons
+  const PER_PAGE = 10;
+  let activeFilter = "All";
+  let currentPage = 1;
+
   const categoryMap = {
     "All": null,
-    "Engineering": ["#Rust", "#Distributed", "#React", "#NodeJS", "#Kubernetes", "#AWS", "#CI/CD", "#Web3"],
-    "Design": ["#DesignSystems", "#Figma", "#Accessibility", "#UI", "#UX"],
-    "AI/ML": ["#MachineLearning", "#PyTorch", "#Ethics", "#Python", "#Analytics", "#Dataviz"],
-    "Open Source": ["#OpenSource"],
+    "Engineering": ["#rust", "#distributed", "#react", "#nodejs", "#node.js", "#kubernetes", "#aws", "#ci/cd", "#web3", "#docker", "#mern", "#typescript", "#flutter", "#dart", "#linux", "#networking", "#azure"],
+    "Design": ["#designsystems", "#figma", "#accessibility", "#ui", "#ux", "#design", "#css"],
+    "AI/ML": ["#machinelearning", "#pytorch", "#tensorflow", "#nlp", "#deeplearning", "#computervision", "#python", "#analytics", "#dataviz", "#sql"],
+    "Open Source": ["#opensource", "#github"],
   };
 
-  let activeFilter = "All";
-
-  function filterCards() {
+  // Get cards that match current search + filter
+  function getVisibleCards() {
     const query = searchInput.value.toLowerCase().trim();
-
-    memberCards.forEach((card) => {
-      const name = card.querySelector(".member-name")?.textContent.toLowerCase() || "";
-      const role = card.querySelector(".member-role")?.textContent.toLowerCase() || "";
+    return allCards.filter((card) => {
+      const name = (card.querySelector(".member-name")?.textContent || "").toLowerCase();
+      const role = (card.querySelector(".member-role")?.textContent || "").toLowerCase();
       const tags = Array.from(card.querySelectorAll(".member-tags span")).map(t => t.textContent.toLowerCase());
-      const bio = card.querySelector(".member-bio")?.textContent.toLowerCase() || "";
+      const bio = (card.querySelector(".member-bio")?.textContent || "").toLowerCase();
       const allText = name + " " + role + " " + tags.join(" ") + " " + bio;
 
-      // Search match
       const matchesSearch = !query || allText.includes(query);
 
-      // Filter match
       let matchesFilter = true;
       if (activeFilter !== "All" && categoryMap[activeFilter]) {
-        const filterTags = categoryMap[activeFilter].map(t => t.toLowerCase());
+        const filterTags = categoryMap[activeFilter];
         matchesFilter = tags.some(tag => filterTags.includes(tag)) ||
-          filterTags.some(ft => role.includes(ft.replace("#", "").toLowerCase()));
+          filterTags.some(ft => role.includes(ft.replace("#", "")));
       }
-
-      card.style.display = matchesSearch && matchesFilter ? "" : "none";
+      return matchesSearch && matchesFilter;
     });
   }
 
-  searchInput.addEventListener("input", filterCards);
+  function renderPage() {
+    const visible = getVisibleCards();
+    const totalPages = Math.ceil(visible.length / PER_PAGE);
+    if (currentPage > totalPages) currentPage = totalPages || 1;
+
+    const start = (currentPage - 1) * PER_PAGE;
+    const end = start + PER_PAGE;
+    const pageCards = visible.slice(start, end);
+
+    // Hide all, then show only current page
+    allCards.forEach(c => c.style.display = "none");
+    pageCards.forEach(c => c.style.display = "");
+
+    // Build pagination
+    paginationEl.innerHTML = "";
+    if (totalPages <= 1) return; // No pagination needed
+
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.className = "page-btn" + (i === currentPage ? " active" : "");
+      btn.textContent = i;
+      btn.addEventListener("click", () => {
+        currentPage = i;
+        renderPage();
+        // Scroll to top of grid
+        document.getElementById("membersGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      paginationEl.appendChild(btn);
+    }
+
+    if (currentPage < totalPages) {
+      const next = document.createElement("button");
+      next.className = "page-btn next";
+      next.textContent = "Next →";
+      next.addEventListener("click", () => {
+        currentPage++;
+        renderPage();
+        document.getElementById("membersGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      paginationEl.appendChild(next);
+    }
+  }
+
+  searchInput.addEventListener("input", () => { currentPage = 1; renderPage(); });
 
   filterBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       filterBtns.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       activeFilter = btn.textContent.trim();
-      filterCards();
+      currentPage = 1;
+      renderPage();
     });
   });
 
-  // Pagination active state
-  const pageBtns = document.querySelectorAll(".page-btn:not(.next)");
-  pageBtns.forEach((btn) => {
+  // Initial render
+  renderPage();
+})();
+
+
+// ─── PROFILE MODAL ─────────────────────────────────────────────
+(function initProfileModal() {
+  const overlay = document.getElementById("profileOverlay");
+  const closeBtn = document.getElementById("profileClose");
+  if (!overlay) return;
+
+  function openModal(card) {
+    const name = card.querySelector(".member-name")?.textContent || "";
+    const role = card.querySelector(".member-role")?.textContent || "";
+    const bio = card.querySelector(".member-bio")?.textContent || "";
+    const avatar = card.querySelector(".member-avatar")?.textContent || "";
+    const tags = Array.from(card.querySelectorAll(".member-tags span")).map(t => t.textContent);
+    const cover = card.querySelector(".member-cover");
+    const coverStyle = cover ? window.getComputedStyle(cover).background : "";
+
+    document.getElementById("profileName").textContent = name;
+    document.getElementById("profileRole").textContent = role;
+    document.getElementById("profileBio").textContent = bio;
+    document.getElementById("profileAvatar").textContent = avatar;
+
+    // Copy cover gradient
+    const profileCover = document.getElementById("profileCover");
+    if (coverStyle) profileCover.style.background = coverStyle;
+
+    // Build tags
+    const tagsEl = document.getElementById("profileTags");
+    tagsEl.innerHTML = "";
+    tags.forEach(t => {
+      const span = document.createElement("span");
+      span.textContent = t;
+      tagsEl.appendChild(span);
+    });
+
+    overlay.classList.add("open");
+    document.body.classList.add("modal-open");
+  }
+
+  function closeModal() {
+    overlay.classList.remove("open");
+    document.body.classList.remove("modal-open");
+  }
+
+  // Delegate click on all "View Profile" links
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest(".member-link");
+    if (link) {
+      e.preventDefault();
+      const card = link.closest(".member-card");
+      if (card) openModal(card);
+    }
+  });
+
+  closeBtn?.addEventListener("click", closeModal);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  });
+})();
+
+
+// ─── NEWS SEARCH, FILTER & PAGINATION ──────────────────────────
+(function initNewsPage() {
+  const searchInput = document.getElementById("newsSearch");
+  const filterBtns = document.querySelectorAll(".news-hero .filter-btn");
+  const allCards = Array.from(document.querySelectorAll(".news-card"));
+  const paginationEl = document.getElementById("newsPagination");
+  if (!searchInput || !allCards.length) return;
+
+  const PER_PAGE = 6;
+  let activeCategory = "All";
+  let currentPage = 1;
+
+  function getVisibleCards() {
+    const query = searchInput.value.toLowerCase().trim();
+    return allCards.filter((card) => {
+      const title = (card.querySelector(".news-title")?.textContent || "").toLowerCase();
+      const summary = (card.querySelector(".news-summary")?.textContent || "").toLowerCase();
+      const badge = (card.querySelector(".news-badge")?.textContent || "").toLowerCase();
+      const category = card.dataset.category || "";
+      const allText = title + " " + summary + " " + badge;
+
+      const matchesSearch = !query || allText.includes(query);
+      const matchesFilter = activeCategory === "All" || category === activeCategory;
+      return matchesSearch && matchesFilter;
+    });
+  }
+
+  function renderPage() {
+    const visible = getVisibleCards();
+    const totalPages = Math.ceil(visible.length / PER_PAGE);
+    if (currentPage > totalPages) currentPage = totalPages || 1;
+
+    const start = (currentPage - 1) * PER_PAGE;
+    const pageCards = visible.slice(start, start + PER_PAGE);
+
+    allCards.forEach(c => c.style.display = "none");
+    pageCards.forEach(c => c.style.display = "");
+
+    paginationEl.innerHTML = "";
+    if (totalPages <= 1) return;
+
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.className = "page-btn" + (i === currentPage ? " active" : "");
+      btn.textContent = i;
+      btn.addEventListener("click", () => {
+        currentPage = i;
+        renderPage();
+        document.getElementById("newsGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      paginationEl.appendChild(btn);
+    }
+
+    if (currentPage < totalPages) {
+      const next = document.createElement("button");
+      next.className = "page-btn next";
+      next.textContent = "Next →";
+      next.addEventListener("click", () => {
+        currentPage++;
+        renderPage();
+        document.getElementById("newsGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      paginationEl.appendChild(next);
+    }
+  }
+
+  searchInput.addEventListener("input", () => { currentPage = 1; renderPage(); });
+
+  filterBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      pageBtns.forEach((b) => b.classList.remove("active"));
+      filterBtns.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
+      activeCategory = btn.dataset.category || btn.textContent.trim();
+      currentPage = 1;
+      renderPage();
     });
   });
+
+  renderPage();
+})();
+
+
+// ─── SPIRIT EYE TRACKING ───────────────────────────────────────
+(function initSpiritEyes() {
+  const leftEye = document.getElementById("spiritLeftEye");
+  const rightEye = document.getElementById("spiritRightEye");
+  const spiritContainer = document.getElementById("spiritContainer");
+  const spiritSvg = document.getElementById("spiritSvg");
+  if (!leftEye || !rightEye || !spiritContainer || !spiritSvg) return;
+
+  // Eye center positions in SVG coordinates
+  const LEFT_EYE_CX = 120, LEFT_EYE_CY = 155;
+  const RIGHT_EYE_CX = 180, RIGHT_EYE_CY = 155;
+  const MAX_OFFSET = 8; // max pixels the pupil can move within socket
+
+  let cursorX = 0, cursorY = 0;
+  let isHeroVisible = true;
+  let currentLeftX = 0, currentLeftY = 0;
+  let currentRightX = 0, currentRightY = 0;
+
+  document.addEventListener("mousemove", (e) => {
+    cursorX = e.clientX;
+    cursorY = e.clientY;
+  });
+
+  // Only track when hero is in view for performance
+  const heroSection = document.getElementById("home");
+  if (heroSection) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isHeroVisible = entries[0].isIntersecting;
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(heroSection);
+  }
+
+  function getEyeScreenPos(svgCx, svgCy) {
+    // Convert SVG coordinates to screen coordinates
+    const svgRect = spiritSvg.getBoundingClientRect();
+    const viewBox = spiritSvg.viewBox.baseVal;
+    const scaleX = svgRect.width / viewBox.width;
+    const scaleY = svgRect.height / viewBox.height;
+    return {
+      x: svgRect.left + svgCx * scaleX,
+      y: svgRect.top + svgCy * scaleY
+    };
+  }
+
+  function calcOffset(eyeScreenX, eyeScreenY) {
+    const dx = cursorX - eyeScreenX;
+    const dy = cursorY - eyeScreenY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist === 0) return { x: 0, y: 0 };
+    // Scale offset proportionally but cap at MAX_OFFSET
+    const clampedDist = Math.min(dist, 300); // beyond 300px => full offset
+    const ratio = (clampedDist / 300) * MAX_OFFSET;
+    return {
+      x: (dx / dist) * ratio,
+      y: (dy / dist) * ratio
+    };
+  }
+
+  function animate() {
+    if (isHeroVisible) {
+      const leftScreen = getEyeScreenPos(LEFT_EYE_CX, LEFT_EYE_CY);
+      const rightScreen = getEyeScreenPos(RIGHT_EYE_CX, RIGHT_EYE_CY);
+
+      const leftOffset = calcOffset(leftScreen.x, leftScreen.y);
+      const rightOffset = calcOffset(rightScreen.x, rightScreen.y);
+
+      // Smooth lerp for buttery movement
+      currentLeftX += (leftOffset.x - currentLeftX) * 0.12;
+      currentLeftY += (leftOffset.y - currentLeftY) * 0.12;
+      currentRightX += (rightOffset.x - currentRightX) * 0.12;
+      currentRightY += (rightOffset.y - currentRightY) * 0.12;
+
+      leftEye.setAttribute("transform",
+        `translate(${currentLeftX.toFixed(2)}, ${currentLeftY.toFixed(2)})`);
+      rightEye.setAttribute("transform",
+        `translate(${currentRightX.toFixed(2)}, ${currentRightY.toFixed(2)})`);
+    }
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+})();
+
+
+// ─── SPIRIT HEAD-RUB BLUSH ─────────────────────────────────────
+(function initSpiritBlush() {
+  const spiritContainer = document.getElementById("spiritContainer");
+  const headZone = document.getElementById("spiritHeadZone");
+  const hearts = [
+    document.getElementById("spiritHeart1"),
+    document.getElementById("spiritHeart2"),
+    document.getElementById("spiritHeart3"),
+  ];
+  if (!spiritContainer || !headZone) return;
+
+  let rubCount = 0;
+  let lastX = 0;
+  let lastY = 0;
+  let lastDir = 0; // track direction changes for "rubbing" detection
+  let isBlushing = false;
+  let blushTimeout = null;
+  let heartInterval = null;
+
+  // Detect rubbing = rapid back-and-forth movement over head
+  headZone.addEventListener("mousemove", (e) => {
+    const dx = e.movementX || (e.clientX - lastX);
+    const dy = e.movementY || (e.clientY - lastY);
+    lastX = e.clientX;
+    lastY = e.clientY;
+
+    // Detect direction change (rubbing = changing horizontal direction)
+    const currentDir = dx > 0 ? 1 : dx < 0 ? -1 : 0;
+    if (currentDir !== 0 && currentDir !== lastDir) {
+      rubCount += 2; // direction change = rubbing motion
+      lastDir = currentDir;
+    } else {
+      rubCount += 0.3;
+    }
+
+    // Threshold to start blushing
+    if (rubCount >= 8 && !isBlushing) {
+      startBlush();
+    }
+
+    // Reset fade timer on continued rubbing
+    if (isBlushing) {
+      clearTimeout(blushTimeout);
+      blushTimeout = setTimeout(stopBlush, 1500);
+    }
+  });
+
+  headZone.addEventListener("mouseleave", () => {
+    rubCount = 0;
+    lastDir = 0;
+    if (isBlushing) {
+      clearTimeout(blushTimeout);
+      blushTimeout = setTimeout(stopBlush, 1500);
+    }
+  });
+
+  function startBlush() {
+    isBlushing = true;
+    spiritContainer.classList.add("spirit-blushing");
+
+    // Spawn hearts periodically
+    spawnHearts();
+    heartInterval = setInterval(spawnHearts, 800);
+
+    // Set timeout to stop
+    blushTimeout = setTimeout(stopBlush, 1500);
+  }
+
+  function stopBlush() {
+    isBlushing = false;
+    rubCount = 0;
+    spiritContainer.classList.remove("spirit-blushing");
+    clearInterval(heartInterval);
+    heartInterval = null;
+
+    // Reset hearts
+    hearts.forEach((h) => {
+      if (h) {
+        h.classList.remove("spirit-heart-float");
+        h.style.fill = "rgba(255,120,150,0)";
+      }
+    });
+  }
+
+  function spawnHearts() {
+    hearts.forEach((h, i) => {
+      if (!h) return;
+      // Stagger each heart
+      setTimeout(() => {
+        h.classList.remove("spirit-heart-float");
+        h.style.fill = "rgba(255,120,150,0)";
+        // force reflow
+        void h.offsetWidth;
+        h.style.fill = "rgba(255,120,150,0.7)";
+        h.classList.add("spirit-heart-float");
+
+        // Clean up after animation
+        setTimeout(() => {
+          h.classList.remove("spirit-heart-float");
+          h.style.fill = "rgba(255,120,150,0)";
+        }, 1500);
+      }, i * 200);
+    });
+  }
 })();
 
 

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tech News — The Spirit Hub</title>
+    <meta name="description"
+        content="Stay updated with the latest tech news, AI breakthroughs, developer tools, and industry insights curated for The Spirit Hub community." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+    <!-- Ambient particles canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Custom cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-aura" id="cursorAura"></div>
+
+    <!-- ===================== NAV ===================== -->
+    <header class="site-header" id="siteHeader">
+        <nav class="nav-inner">
+            <a href="../index.html" class="brand">
+                <span class="brand-icon">✦</span>
+                <span class="brand-text">The Spirit Hub</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html#about">About</a></li>
+                <li><a href="../index.html#interests">Topics</a></li>
+                <li><a href="../index.html#events">Events</a></li>
+                <li><a href="members.html">Members</a></li>
+                <li><a href="news.html" class="active">News</a></li>
+            </ul>
+            <button class="btn-join" id="joinBtn">Join the Hub</button>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul>
+                <li><a href="../index.html#about">About</a></li>
+                <li><a href="../index.html#interests">Topics</a></li>
+                <li><a href="../index.html#events">Events</a></li>
+                <li><a href="members.html">Members</a></li>
+                <li><a href="news.html" class="active">News</a></li>
+                <li><a href="../index.html#cta">Join the Hub</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ===================== HERO ===================== -->
+        <section class="news-hero">
+            <div class="hero-bg-text">NEWS</div>
+            <div class="container reveal-fade">
+                <span class="section-tag">✦ Stay Informed</span>
+                <h1 class="hero-title">
+                    Tech<br />
+                    <em>Pulse</em>
+                </h1>
+                <p class="hero-subtitle">
+                    The latest breakthroughs, launches, and stories shaping the tech landscape — curated for builders
+                    and thinkers.
+                </p>
+            </div>
+            <div class="hero-orb"></div>
+        </section>
+
+        <!-- ===================== NEWS GRID ===================== -->
+        <section class="news-section section-pad">
+            <div class="container">
+                <div class="news-grid" id="newsGrid">
+
+                    <!-- Article 1 -->
+                    <article class="news-card reveal-up delay-1" data-category="AI">
+                        <div class="news-card-cover cover-1"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge ai">AI</span>
+                                <span class="news-date">Feb 27, 2026</span>
+                            </div>
+                            <h3 class="news-title">GPT-5 Released: Multimodal Reasoning Reaches Human-Level Benchmarks
+                            </h3>
+                            <p class="news-summary">OpenAI's latest model demonstrates unprecedented performance across
+                                coding, math, and scientific reasoning tasks, with native image and video understanding
+                                built in.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 2 -->
+                    <article class="news-card reveal-up delay-2" data-category="Web">
+                        <div class="news-card-cover cover-2"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge web">Web</span>
+                                <span class="news-date">Feb 26, 2026</span>
+                            </div>
+                            <h3 class="news-title">React 21 Ships with Built-in Server Components and Zero-Config SSR
+                            </h3>
+                            <p class="news-summary">The React team delivers the most significant update yet, making
+                                server-first architecture the default with zero configuration needed for developers.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 3 -->
+                    <article class="news-card reveal-up delay-3" data-category="Security">
+                        <div class="news-card-cover cover-3"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge security">Security</span>
+                                <span class="news-date">Feb 25, 2026</span>
+                            </div>
+                            <h3 class="news-title">Critical Zero-Day in Linux Kernel Patched After Global Alert</h3>
+                            <p class="news-summary">A privilege escalation vulnerability affecting millions of servers
+                                worldwide has been patched within 48 hours after coordinated disclosure by security
+                                researchers.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 4 -->
+                    <article class="news-card reveal-up delay-1" data-category="Mobile">
+                        <div class="news-card-cover cover-4"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge mobile">Mobile</span>
+                                <span class="news-date">Feb 24, 2026</span>
+                            </div>
+                            <h3 class="news-title">Apple Unveils iOS 20 with On-Device AI Agent Capabilities</h3>
+                            <p class="news-summary">Apple's latest mobile OS introduces personal AI agents that automate
+                                tasks across apps, powered entirely by the new Neural Engine chip — no cloud needed.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 5 -->
+                    <article class="news-card reveal-up delay-2" data-category="Open Source">
+                        <div class="news-card-cover cover-5"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge opensource">Open Source</span>
+                                <span class="news-date">Feb 23, 2026</span>
+                            </div>
+                            <h3 class="news-title">Rust Foundation Announces $50M Fund for Open Source Infrastructure
+                            </h3>
+                            <p class="news-summary">Major tech companies pool resources to fund critical open source
+                                projects, starting with Rust ecosystem tooling and crate security audits.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 6 -->
+                    <article class="news-card reveal-up delay-3" data-category="AI">
+                        <div class="news-card-cover cover-6"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge ai">AI</span>
+                                <span class="news-date">Feb 22, 2026</span>
+                            </div>
+                            <h3 class="news-title">Google DeepMind's AlphaCode 3 Wins International Coding Championship
+                            </h3>
+                            <p class="news-summary">The AI system outperforms 99.8% of human competitors in the ICPC,
+                                solving complex algorithmic problems in record time.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 7 -->
+                    <article class="news-card reveal-up delay-1" data-category="Web">
+                        <div class="news-card-cover cover-7"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge web">Web</span>
+                                <span class="news-date">Feb 21, 2026</span>
+                            </div>
+                            <h3 class="news-title">WebAssembly 3.0 Brings Garbage Collection and Native Threads to
+                                Browsers</h3>
+                            <p class="news-summary">The latest WASM spec makes it possible to run Java, C#, and Go
+                                natively in browsers with near-native performance and full thread support.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 8 -->
+                    <article class="news-card reveal-up delay-2" data-category="Security">
+                        <div class="news-card-cover cover-8"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge security">Security</span>
+                                <span class="news-date">Feb 20, 2026</span>
+                            </div>
+                            <h3 class="news-title">EU Passes Digital Identity Act: End-to-End Encryption Mandated for
+                                All Apps</h3>
+                            <p class="news-summary">New European regulation requires all messaging and communication
+                                apps to implement E2EE by default, reshaping the digital privacy landscape.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 9 -->
+                    <article class="news-card reveal-up delay-3" data-category="Mobile">
+                        <div class="news-card-cover cover-1"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge mobile">Mobile</span>
+                                <span class="news-date">Feb 19, 2026</span>
+                            </div>
+                            <h3 class="news-title">Flutter 5 Launches with Native Desktop Performance and AI Widgets
+                            </h3>
+                            <p class="news-summary">Google's cross-platform framework now compiles to native ARM code on
+                                desktop, and introduces AI-powered adaptive UI components.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 10 -->
+                    <article class="news-card reveal-up delay-1" data-category="AI">
+                        <div class="news-card-cover cover-2"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge ai">AI</span>
+                                <span class="news-date">Feb 18, 2026</span>
+                            </div>
+                            <h3 class="news-title">Meta Releases Llama 4: Open Source Model Rivals GPT-5 on Most
+                                Benchmarks</h3>
+                            <p class="news-summary">Meta's open-weight 400B parameter model is free for commercial use
+                                and runs on consumer hardware with new quantization techniques.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 11 -->
+                    <article class="news-card reveal-up delay-2" data-category="Open Source">
+                        <div class="news-card-cover cover-3"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge opensource">Open Source</span>
+                                <span class="news-date">Feb 17, 2026</span>
+                            </div>
+                            <h3 class="news-title">Linux 7.0 Kernel Released with Real-Time Scheduling Built In</h3>
+                            <p class="news-summary">After years of development, the PREEMPT_RT patch is fully merged
+                                into mainline Linux, enabling real-time applications without custom kernels.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Article 12 -->
+                    <article class="news-card reveal-up delay-3" data-category="Web">
+                        <div class="news-card-cover cover-4"></div>
+                        <div class="news-card-body">
+                            <div class="news-meta">
+                                <span class="news-badge web">Web</span>
+                                <span class="news-date">Feb 16, 2026</span>
+                            </div>
+                            <h3 class="news-title">Deno 3.0 Goes Enterprise: Built-in Database, Auth, and Edge Functions
+                            </h3>
+                            <p class="news-summary">Deno's latest release aims to replace entire backend stacks by
+                                bundling KV storage, JWT authentication, and edge deployment out of the box.</p>
+                            <a href="#" class="news-read-more">Read Article →</a>
+                        </div>
+                    </article>
+
+                </div>
+
+                <!-- Pagination (auto-generated by JS) -->
+                <div class="pagination" id="newsPagination"></div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.html" class="brand">
+                        <span class="brand-icon">✦</span>
+                        <span class="brand-text">The Spirit Hub</span>
+                    </a>
+                    <p>A community for the curious, the driven, and the passionate minds of technology.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="../index.html#interests">Topics</a></li>
+                        <li><a href="#">Projects</a></li>
+                        <li><a href="../index.html#events">Events</a></li>
+                        <li><a href="#">Mentorship</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Knowledge Library</a></li>
+                        <li><a href="#">Job Board</a></li>
+                        <li><a href="#">Newsletter</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="../index.html#about">About</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 The Spirit Hub. All rights reserved.</span>
+                <span>Built with ✦ for the curious minds of the world.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>

@@ -562,6 +562,193 @@ body:has(button:hover) .cursor-aura {
   }
 }
 
+/* ─── SPIRIT GHOST ─────────────────────────────────────────── */
+.spirit-container {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(280px, 28vw, 420px);
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
+  animation: spirit-float 5s ease-in-out infinite;
+}
+
+.spirit-svg {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 40px rgba(96, 165, 250, 0.08)) drop-shadow(0 0 80px rgba(139, 92, 246, 0.04));
+}
+
+@keyframes spirit-float {
+
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  25% {
+    transform: translateY(calc(-50% - 15px)) translateX(5px);
+  }
+
+  50% {
+    transform: translateY(calc(-50% + 5px)) translateX(-3px);
+  }
+
+  75% {
+    transform: translateY(calc(-50% - 10px)) translateX(-5px);
+  }
+}
+
+/* Tendril sway */
+.spirit-tendril {
+  animation: tendril-sway 3s ease-in-out infinite alternate;
+  transform-origin: top center;
+}
+
+.spirit-tendril:nth-child(odd) {
+  animation-delay: 0.5s;
+}
+
+@keyframes tendril-sway {
+  0% {
+    transform: skewX(-2deg);
+  }
+
+  100% {
+    transform: skewX(2deg);
+  }
+}
+
+/* Sparkle twinkle */
+.spirit-sparkle {
+  animation: sparkle-twinkle 2.5s ease-in-out infinite;
+}
+
+.spirit-sparkle.s2 {
+  animation-delay: 0.4s;
+  animation-duration: 3s;
+}
+
+.spirit-sparkle.s3 {
+  animation-delay: 0.8s;
+  animation-duration: 2s;
+}
+
+.spirit-sparkle.s4 {
+  animation-delay: 1.2s;
+  animation-duration: 3.5s;
+}
+
+.spirit-sparkle.s5 {
+  animation-delay: 1.6s;
+  animation-duration: 2.8s;
+}
+
+@keyframes sparkle-twinkle {
+
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+}
+
+/* ─── SPIRIT BLUSH / HEAD-RUB REACTIONS ───────────────────── */
+.spirit-blush,
+.spirit-mouth {
+  transition: all 0.4s ease;
+}
+
+.spirit-eye-socket,
+#spiritLeftEye,
+#spiritRightEye {
+  transition: transform 0.35s ease;
+  transform-origin: center;
+}
+
+.spirit-heart {
+  transition: fill 0.3s ease;
+}
+
+/* When blushing class is active */
+.spirit-container.spirit-blushing .spirit-blush {
+  fill: rgba(255, 120, 150, 0.35) !important;
+}
+
+/* Squish eyes vertically to create narrow cute squint */
+.spirit-container.spirit-blushing .spirit-eye-socket {
+  transform: scaleY(0.35);
+}
+
+.spirit-container.spirit-blushing #spiritLeftEye {
+  transform: scaleY(0.35) !important;
+}
+
+.spirit-container.spirit-blushing #spiritRightEye {
+  transform: scaleY(0.35) !important;
+}
+
+.spirit-container.spirit-blushing .spirit-mouth {
+  stroke: rgba(255, 150, 180, 0.6) !important;
+}
+
+/* Heart float animation */
+.spirit-heart-float {
+  animation: heart-float 1.5s ease-out forwards;
+}
+
+@keyframes heart-float {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.8);
+  }
+}
+
+/* Gentle wiggle when being rubbed */
+.spirit-container.spirit-blushing .spirit-svg {
+  animation: spirit-wiggle 0.4s ease-in-out;
+}
+
+@keyframes spirit-wiggle {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-2deg);
+  }
+
+  75% {
+    transform: rotate(2deg);
+  }
+}
+
+/* Responsive: hide on small screens */
+@media (max-width: 900px) {
+  .spirit-container {
+    display: none;
+  }
+}
+
 /* ─── ABOUT ────────────────────────────────────────────────── */
 .about {
   border-top: 1px solid var(--border);
@@ -1303,7 +1490,7 @@ body:has(button:hover) .cursor-aura {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow: visible;
   transition: transform var(--transition), border-color var(--transition);
   display: flex;
   flex-direction: column;
@@ -1318,6 +1505,8 @@ body:has(button:hover) .cursor-aura {
   height: 80px;
   background: var(--border-2);
   position: relative;
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
 }
 
 /* Gradients for covers */
@@ -1358,6 +1547,8 @@ body:has(button:hover) .cursor-aura {
   display: flex;
   flex-direction: column;
   flex: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .member-avatar {
@@ -1510,6 +1701,263 @@ body:has(button:hover) .cursor-aura {
   color: var(--gold);
 }
 
+/* ─── NEWS PAGE ────────────────────────────────────────────── */
+.news-hero {
+  padding: 160px 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+
+.news-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform var(--transition), border-color var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.news-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold-dim);
+}
+
+.news-card-cover {
+  height: 6px;
+  position: relative;
+}
+
+.news-card-body {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.news-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.news-badge {
+  font-size: 0.6rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.news-badge.ai {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+}
+
+.news-badge.web {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+}
+
+.news-badge.mobile {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+.news-badge.security {
+  background: rgba(251, 113, 133, 0.15);
+  color: #fb7185;
+}
+
+.news-badge.opensource {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.news-date {
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.news-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.news-summary {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.news-read-more {
+  font-size: 0.7rem;
+  color: var(--text);
+  letter-spacing: 0.05em;
+  transition: color var(--transition);
+  align-self: flex-start;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+}
+
+.news-read-more:hover {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* ─── PROFILE MODAL ────────────────────────────────────────── */
+.profile-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.profile-modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.profile-modal {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  transform: translateY(24px) scale(0.96);
+  transition: transform 0.3s ease;
+}
+
+.profile-modal-overlay.open .profile-modal {
+  transform: translateY(0) scale(1);
+}
+
+.profile-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--text);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background var(--transition);
+  cursor: pointer;
+  border: none;
+}
+
+.profile-modal-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.profile-modal-cover {
+  height: 120px;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+}
+
+.profile-modal-body {
+  padding: 0 28px 32px;
+  position: relative;
+}
+
+.profile-modal-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: -36px;
+  border: 3px solid var(--surface);
+  position: relative;
+  z-index: 2;
+}
+
+.profile-modal-name {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  color: var(--text);
+  margin-top: 14px;
+}
+
+.profile-modal-role {
+  font-size: 0.8rem;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+
+.profile-modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.profile-modal-tags span {
+  font-size: 0.68rem;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-2);
+  color: var(--muted);
+}
+
+.profile-modal-section {
+  margin-top: 24px;
+}
+
+.profile-modal-section h4 {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold-dim);
+  margin-bottom: 8px;
+}
+
+.profile-modal-section p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
 /* ─── RESPONSIVE ───────────────────────────────────────────── */
 
 @media (max-width: 1024px) {
@@ -1534,6 +1982,10 @@ body:has(button:hover) .cursor-aura {
 @media (max-width: 768px) {
   .container {
     padding: 0 24px;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
   }
 
   .section-pad {

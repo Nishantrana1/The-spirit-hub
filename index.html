@@ -35,6 +35,7 @@
         <li><a href="#features">Features</a></li>
         <li><a href="#events">Events</a></li>
         <li><a href="pages/members.html">Members</a></li>
+        <li><a href="pages/news.html">News</a></li>
       </ul>
       <div class="join-wrapper" id="joinWrapper">
         <button class="btn-join" id="joinBtn">Join the Hub</button>
@@ -68,6 +69,7 @@
         <li><a href="#features">Features</a></li>
         <li><a href="#events">Events</a></li>
         <li><a href="pages/members.html">Members</a></li>
+        <li><a href="pages/news.html">News</a></li>
         <li><a href="#cta">Join the Hub</a></li>
       </ul>
     </div>
@@ -96,23 +98,141 @@
         </div>
         <div class="hero-stats reveal-fade delay-4">
           <div class="stat-item">
-            <span class="stat-value" data-target="14800">0</span>
+            <span class="stat-value" data-target="20">0</span>
             <span class="stat-label">Members</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-value" data-target="420">0</span>
-            <span class="stat-label">Projects</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-value" data-target="60">0</span>
-            <span class="stat-label">Events / Month</span>
           </div>
         </div>
       </div>
       <div class="hero-orb"></div>
       <div class="hero-orb orb-2"></div>
+
+      <!-- Spirit Ghost with eye-tracking -->
+      <div class="spirit-container" id="spiritContainer">
+        <svg viewBox="0 0 300 420" xmlns="http://www.w3.org/2000/svg" class="spirit-svg" id="spiritSvg">
+          <defs>
+            <!-- Ghost body gradient -->
+            <radialGradient id="ghostGlow" cx="50%" cy="30%" r="60%">
+              <stop offset="0%" stop-color="rgba(96,165,250,0.18)" />
+              <stop offset="60%" stop-color="rgba(139,92,246,0.08)" />
+              <stop offset="100%" stop-color="rgba(96,165,250,0)" />
+            </radialGradient>
+            <!-- Eye glow -->
+            <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(96,165,250,0.9)" />
+              <stop offset="100%" stop-color="rgba(139,92,246,0.4)" />
+            </radialGradient>
+            <!-- Outer aura -->
+            <filter id="spiritBlur">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="6" />
+            </filter>
+            <filter id="spiritGlow">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <!-- Blush filter -->
+            <filter id="blushSoft">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+            </filter>
+          </defs>
+
+          <!-- Outer aura glow -->
+          <ellipse cx="150" cy="180" rx="110" ry="160" fill="url(#ghostGlow)" filter="url(#spiritBlur)" opacity="0.5" />
+
+          <!-- Ghost body -->
+          <path d="
+            M150 30
+            C 90 30, 50 90, 50 160
+            C 50 230, 55 300, 60 340
+            Q 70 380, 85 360
+            Q 100 340, 110 370
+            Q 120 400, 135 365
+            Q 145 340, 150 375
+            Q 155 340, 165 365
+            Q 180 400, 190 370
+            Q 200 340, 215 360
+            Q 230 380, 240 340
+            C 245 300, 250 230, 250 160
+            C 250 90, 210 30, 150 30 Z
+          " fill="rgba(96,165,250,0.06)" stroke="rgba(96,165,250,0.15)" stroke-width="1.5" />
+
+          <!-- Inner glow layer -->
+          <path d="
+            M150 45
+            C 100 45, 65 100, 65 165
+            C 65 225, 70 290, 75 325
+            Q 83 355, 93 340
+            Q 103 325, 113 350
+            Q 123 375, 135 348
+            Q 145 328, 150 355
+            Q 155 328, 165 348
+            Q 177 375, 187 350
+            Q 197 325, 207 340
+            Q 217 355, 225 325
+            C 230 290, 235 225, 235 165
+            C 235 100, 200 45, 150 45 Z
+          " fill="rgba(139,92,246,0.04)" stroke="rgba(139,92,246,0.08)" stroke-width="0.8" />
+
+          <!-- Wispy tendrils -->
+          <path d="M80 280 Q 60 320, 70 350 Q 75 365, 85 355" fill="none" stroke="rgba(96,165,250,0.1)" stroke-width="1"
+            stroke-linecap="round" class="spirit-tendril" />
+          <path d="M220 280 Q 240 320, 230 350 Q 225 365, 215 355" fill="none" stroke="rgba(96,165,250,0.1)"
+            stroke-width="1" stroke-linecap="round" class="spirit-tendril" />
+          <path d="M110 310 Q 95 350, 105 380" fill="none" stroke="rgba(139,92,246,0.08)" stroke-width="0.8"
+            stroke-linecap="round" class="spirit-tendril" />
+          <path d="M190 310 Q 205 350, 195 380" fill="none" stroke="rgba(139,92,246,0.08)" stroke-width="0.8"
+            stroke-linecap="round" class="spirit-tendril" />
+
+          <!-- Left eye socket -->
+          <ellipse cx="120" cy="155" rx="18" ry="22" fill="rgba(8,10,15,0.6)" stroke="rgba(96,165,250,0.2)"
+            stroke-width="1" class="spirit-eye-socket" />
+          <!-- Left eye pupil -->
+          <g id="spiritLeftEye" filter="url(#spiritGlow)">
+            <circle cx="120" cy="155" r="6" fill="url(#eyeGlow)" />
+            <circle cx="120" cy="155" r="2.5" fill="rgba(200,220,255,0.95)" />
+          </g>
+
+          <!-- Right eye socket -->
+          <ellipse cx="180" cy="155" rx="18" ry="22" fill="rgba(8,10,15,0.6)" stroke="rgba(96,165,250,0.2)"
+            stroke-width="1" class="spirit-eye-socket" />
+          <!-- Right eye pupil -->
+          <g id="spiritRightEye" filter="url(#spiritGlow)">
+            <circle cx="180" cy="155" r="6" fill="url(#eyeGlow)" />
+            <circle cx="180" cy="155" r="2.5" fill="rgba(200,220,255,0.95)" />
+          </g>
+
+          <!-- Blush marks (hidden by default) -->
+          <ellipse id="spiritBlushLeft" cx="100" cy="180" rx="16" ry="8" fill="rgba(255,120,150,0)"
+            filter="url(#blushSoft)" class="spirit-blush" />
+          <ellipse id="spiritBlushRight" cx="200" cy="180" rx="16" ry="8" fill="rgba(255,120,150,0)"
+            filter="url(#blushSoft)" class="spirit-blush" />
+
+
+          <!-- Shy mouth (hidden by default) -->
+          <path id="spiritMouth" d="M138 200 Q 150 212, 162 200" fill="none" stroke="rgba(255,150,180,0)"
+            stroke-width="1.5" stroke-linecap="round" class="spirit-mouth" />
+
+          <!-- Heart particles (hidden, spawned on rub) -->
+          <text id="spiritHeart1" x="90" y="90" font-size="14" fill="rgba(255,120,150,0)" class="spirit-heart">♥</text>
+          <text id="spiritHeart2" x="200" y="80" font-size="10" fill="rgba(255,120,150,0)"
+            class="spirit-heart h2">♥</text>
+          <text id="spiritHeart3" x="160" y="70" font-size="12" fill="rgba(255,120,150,0)"
+            class="spirit-heart h3">♥</text>
+
+          <!-- Invisible head-rub hit zone (pointer-events enabled) -->
+          <rect id="spiritHeadZone" x="70" y="30" width="160" height="120" fill="transparent"
+            style="pointer-events: all; cursor: pointer;" />
+
+          <!-- Small sparkle particles around spirit -->
+          <circle cx="70" cy="100" r="1.5" fill="rgba(96,165,250,0.3)" class="spirit-sparkle" />
+          <circle cx="230" cy="120" r="1" fill="rgba(139,92,246,0.3)" class="spirit-sparkle s2" />
+          <circle cx="100" cy="250" r="1.2" fill="rgba(96,165,250,0.2)" class="spirit-sparkle s3" />
+          <circle cx="210" cy="80" r="1.8" fill="rgba(96,165,250,0.25)" class="spirit-sparkle s4" />
+          <circle cx="250" cy="240" r="1" fill="rgba(139,92,246,0.2)" class="spirit-sparkle s5" />
+        </svg>
+      </div>
     </section>
 
     <!-- ===================== ABOUT ===================== -->
