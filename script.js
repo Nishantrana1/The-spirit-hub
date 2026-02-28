@@ -9,6 +9,14 @@
 
 // ─── CUSTOM CURSOR ─────────────────────────────────────────────
 (function initCursor() {
+  // Skip custom cursor on touch / mobile devices
+  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 768;
+  if (isTouch) {
+    document.getElementById("cursorDot")?.remove();
+    document.getElementById("cursorAura")?.remove();
+    return;
+  }
+
   const dot = document.getElementById("cursorDot");
   const aura = document.getElementById("cursorAura");
   if (!dot || !aura) return;

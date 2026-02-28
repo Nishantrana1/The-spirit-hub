@@ -111,6 +111,30 @@ body:has(button:hover) .cursor-aura {
   border-color: var(--gold);
 }
 
+/* Hide custom cursor on touch / mobile devices */
+@media (hover: none),
+(pointer: coarse),
+(max-width: 768px) {
+
+  .cursor-dot,
+  .cursor-aura {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    pointer-events: none !important;
+  }
+
+  body,
+  a,
+  button,
+  .btn-primary,
+  .btn-outline {
+    cursor: auto !important;
+  }
+}
+
 /* ─── UTILITY ──────────────────────────────────────────────── */
 .container {
   max-width: 1200px;
