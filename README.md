@@ -133,7 +133,7 @@ community_site/
 We're always looking for passionate tech minds to join us!
 
 - 💬 **Discord**: [Join our server](https://discord.gg/cWYKuwyRVv)
-- 🌐 **Website**: Visit the live site to become a member
+- 🌐 **Website**: https://thespirithub.netlify.app/
 
 ---
 
