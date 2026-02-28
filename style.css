@@ -135,6 +135,10 @@ body:has(button:hover) .cursor-aura {
   }
 }
 
+.hero-join-mobile {
+  display: none;
+}
+
 /* ─── UTILITY ──────────────────────────────────────────────── */
 .container {
   max-width: 1200px;
@@ -2084,6 +2088,31 @@ body.modal-open {
     gap: 20px;
   }
 }
+
+.hero-join-mobile {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+.hero-join-mobile .btn-join {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.hero-join-mobile .join-dropdown {
+  width: 100%;
+  right: auto;
+  left: 0;
+  top: calc(100% - 4px);
+}
+
+.hero-join-mobile .join-dropdown::before {
+  left: 24px;
+  right: auto;
+}
+
 
 @media (max-width: 480px) {
   .topics-grid {

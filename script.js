@@ -145,23 +145,41 @@
 (function initJoinDropdown() {
   const joinBtn = document.getElementById("joinBtn");
   const dropdown = document.getElementById("joinDropdown");
-  if (!joinBtn || !dropdown) return;
+  const heroJoinBtn = document.getElementById("heroJoinBtn");
+  const heroDropdown = document.getElementById("heroJoinDropdown");
 
-  joinBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    dropdown.classList.toggle("open");
-  });
+  if (joinBtn && dropdown) {
+    joinBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle("open");
+      heroDropdown?.classList.remove("open");
+    });
+  }
+
+  if (heroJoinBtn && heroDropdown) {
+    heroJoinBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      heroDropdown.classList.toggle("open");
+      dropdown?.classList.remove("open");
+    });
+  }
 
   // Close when clicking outside
   document.addEventListener("click", (e) => {
-    if (!dropdown.contains(e.target) && e.target !== joinBtn) {
+    if (dropdown && !dropdown.contains(e.target) && e.target !== joinBtn) {
       dropdown.classList.remove("open");
+    }
+    if (heroDropdown && !heroDropdown.contains(e.target) && e.target !== heroJoinBtn) {
+      heroDropdown.classList.remove("open");
     }
   });
 
   // Close on Escape
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") dropdown.classList.remove("open");
+    if (e.key === "Escape") {
+      dropdown?.classList.remove("open");
+      heroDropdown?.classList.remove("open");
+    }
   });
 })();
 
