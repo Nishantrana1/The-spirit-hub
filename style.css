@@ -136,7 +136,19 @@ body:has(button:hover) .cursor-aura {
 }
 
 .hero-join-mobile {
-  display: none;
+  position: relative;
+  width: auto;
+}
+
+.hero-join-mobile .btn-join {
+  display: inline-block;
+}
+
+.hero-join-mobile .join-dropdown {
+  width: 220px;
+  right: auto;
+  left: 0;
+  top: calc(100% + 14px);
 }
 
 /* ─── UTILITY ──────────────────────────────────────────────── */
@@ -316,6 +328,11 @@ body:has(button:hover) .cursor-aura {
 }
 
 /* ─── JOIN DROPDOWN ────────────────────────────────────────── */
+/* Navigation Join Wrapper (Hidden as per user request to favor hero CTA) */
+.site-header .join-wrapper {
+  display: none !important;
+}
+
 .join-wrapper {
   position: relative;
 }
@@ -2089,28 +2106,26 @@ body.modal-open {
   }
 }
 
-.hero-join-mobile {
-  display: block;
-  position: relative;
-  width: 100%;
-}
+@media (max-width: 768px) {
+  .hero-join-mobile {
+    width: 100%;
+  }
 
-.hero-join-mobile .btn-join {
-  display: block;
-  width: 100%;
-  margin-bottom: 12px;
-}
+  .hero-join-mobile .btn-join {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+  }
 
-.hero-join-mobile .join-dropdown {
-  width: 100%;
-  right: auto;
-  left: 0;
-  top: calc(100% - 4px);
-}
+  .hero-join-mobile .join-dropdown {
+    width: 100%;
+    top: calc(100% - 4px);
+  }
 
-.hero-join-mobile .join-dropdown::before {
-  left: 24px;
-  right: auto;
+  .hero-join-mobile .join-dropdown::before {
+    left: 24px;
+    right: auto;
+  }
 }
 
 
