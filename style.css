@@ -1682,6 +1682,16 @@ body:has(button:hover) .cursor-aura {
   color: var(--muted);
   margin-bottom: 24px;
   flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.member-bio.expanded {
+  -webkit-line-clamp: unset;
+  overflow: visible;
 }
 
 .member-link {
