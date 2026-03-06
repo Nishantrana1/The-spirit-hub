@@ -635,85 +635,172 @@
 })();
 
 
-// ─── NEWS SEARCH, FILTER & PAGINATION ──────────────────────────
-(function initNewsPage() {
+// ─── NEWS FETCH, FILTER & PAGINATION (GNEWS API) ─────────────
+(async function initNewsPage() {
   const searchInput = document.getElementById("newsSearch");
   const filterBtns = document.querySelectorAll(".news-hero .filter-btn");
-  const allCards = Array.from(document.querySelectorAll(".news-card"));
+  const gridEl = document.getElementById("newsGrid");
   const paginationEl = document.getElementById("newsPagination");
-  if (!searchInput || !allCards.length) return;
+
+  if (!gridEl) return;
+
+  const API_KEY = "d1aed38fd53cdcd15fabb99798f131fb";
+  const GNEWS_URL = `https://gnews.io/api/v4/top-headlines?category=technology&lang=en&max=30&apikey=${API_KEY}`;
 
   const PER_PAGE = 6;
+  let allArticles = [];
   let activeCategory = "All";
   let currentPage = 1;
 
-  function getVisibleCards() {
-    const query = searchInput.value.toLowerCase().trim();
-    return allCards.filter((card) => {
-      const title = (card.querySelector(".news-title")?.textContent || "").toLowerCase();
-      const summary = (card.querySelector(".news-summary")?.textContent || "").toLowerCase();
-      const badge = (card.querySelector(".news-badge")?.textContent || "").toLowerCase();
-      const category = card.dataset.category || "";
-      const allText = title + " " + summary + " " + badge;
+  // 1. Fetch data from GNews
+  async function fetchNews() {
+    try {
+      const response = await fetch(GNEWS_URL);
+      if (!response.ok) throw new Error("Failed to fetch news");
+
+      const data = await response.json();
+      if (data && data.articles) {
+        // Map GNews articles to our format and assign random pseudo-categories for the filter demo
+        const categories = ["AI", "Web", "Security", "Mobile", "Open Source"];
+        allArticles = data.articles.map((article, index) => {
+          return {
+            ...article,
+            // GNews doesn't give specific tech sub-categories, so we randomly assign one for demo purposes
+            // In a real advanced setup, you might parse the title/content to categorize it accurately
+            demoCategory: categories[index % categories.length]
+          };
+        });
+        renderPage();
+      }
+    } catch (error) {
+      console.error(error);
+      gridEl.innerHTML = `
+        <div style="text-align: center; padding: 4rem 0; width: 100%; grid-column: 1 / -1; color: var(--ember);">
+          Unable to load news at this time. Please check your API key or try again later.
+        </div>
+      `;
+    }
+  }
+
+  // 2. Filter articles based on search and category
+  function getVisibleArticles() {
+    const query = (searchInput?.value || "").toLowerCase().trim();
+    return allArticles.filter((article) => {
+      const title = (article.title || "").toLowerCase();
+      const desc = (article.description || "").toLowerCase();
+      const cat = article.demoCategory.toLowerCase();
+      const allText = title + " " + desc + " " + cat;
 
       const matchesSearch = !query || allText.includes(query);
-      const matchesFilter = activeCategory === "All" || category === activeCategory;
+      const matchesFilter = activeCategory === "All" || article.demoCategory === activeCategory;
+
       return matchesSearch && matchesFilter;
     });
   }
 
+  // 3. Format Date
+  function formatDate(isoString) {
+    if (!isoString) return "";
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    return new Date(isoString).toLocaleDateString('en-US', options);
+  }
+
+  // 4. Render the current page of articles
   function renderPage() {
-    const visible = getVisibleCards();
+    const visible = getVisibleArticles();
     const totalPages = Math.ceil(visible.length / PER_PAGE);
     if (currentPage > totalPages) currentPage = totalPages || 1;
 
     const start = (currentPage - 1) * PER_PAGE;
-    const pageCards = visible.slice(start, start + PER_PAGE);
+    const pageArticles = visible.slice(start, start + PER_PAGE);
 
-    allCards.forEach(c => c.style.display = "none");
-    pageCards.forEach(c => c.style.display = "");
+    // Build HTML for the grid
+    gridEl.innerHTML = "";
 
-    paginationEl.innerHTML = "";
-    if (totalPages <= 1) return;
+    if (pageArticles.length === 0) {
+      gridEl.innerHTML = `
+        <div style="text-align: center; padding: 4rem 0; width: 100%; grid-column: 1 / -1; color: var(--text-muted);">
+          No articles found matching your criteria.
+        </div>
+      `;
+    } else {
+      pageArticles.forEach((article, index) => {
+        // Fallback image if GNews image is missing
+        const imgUrl = article.image || 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800';
+        // Randomize the delay for the reveal animation based on index
+        const delayClass = `delay-${(index % 3) + 1}`;
 
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement("button");
-      btn.className = "page-btn" + (i === currentPage ? " active" : "");
-      btn.textContent = i;
-      btn.addEventListener("click", () => {
-        currentPage = i;
-        renderPage();
-        document.getElementById("newsGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        const cardHTML = `
+          <article class="news-card reveal-up ${delayClass} visible" data-category="${article.demoCategory}">
+              <div class="news-card-cover" style="background-image: url('${imgUrl}'); background-size: cover; background-position: center;"></div>
+              <div class="news-card-body">
+                  <div class="news-meta">
+                      <span class="news-badge ${article.demoCategory.toLowerCase().replace(' ', '')}">${article.demoCategory}</span>
+                      <span class="news-date">${formatDate(article.publishedAt)}</span>
+                  </div>
+                  <h3 class="news-title">${article.title}</h3>
+                  <p class="news-summary">${article.description || ''}</p>
+                  <a href="${article.url}" target="_blank" rel="noopener" class="news-read-more">Read Article →</a>
+              </div>
+          </article>
+        `;
+        gridEl.insertAdjacentHTML("beforeend", cardHTML);
       });
-      paginationEl.appendChild(btn);
     }
 
-    if (currentPage < totalPages) {
-      const next = document.createElement("button");
-      next.className = "page-btn next";
-      next.textContent = "Next →";
-      next.addEventListener("click", () => {
-        currentPage++;
-        renderPage();
-        document.getElementById("newsGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-      paginationEl.appendChild(next);
+    // Build Pagination HTML
+    if (paginationEl) {
+      paginationEl.innerHTML = "";
+      if (totalPages > 1) {
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.className = "page-btn" + (i === currentPage ? " active" : "");
+          btn.textContent = i;
+          btn.addEventListener("click", () => {
+            currentPage = i;
+            renderPage();
+            document.getElementById("newsGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+          paginationEl.appendChild(btn);
+        }
+
+        if (currentPage < totalPages) {
+          const next = document.createElement("button");
+          next.className = "page-btn next";
+          next.textContent = "Next →";
+          next.addEventListener("click", () => {
+            currentPage++;
+            renderPage();
+            document.getElementById("newsGrid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+          paginationEl.appendChild(next);
+        }
+      }
     }
   }
 
-  searchInput.addEventListener("input", () => { currentPage = 1; renderPage(); });
-
-  filterBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      filterBtns.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      activeCategory = btn.dataset.category || btn.textContent.trim();
+  // Set up event listeners for Search & Filter
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
       currentPage = 1;
       renderPage();
     });
-  });
+  }
 
-  renderPage();
+  if (filterBtns) {
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterBtns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeCategory = btn.dataset.category || btn.textContent.trim();
+        currentPage = 1;
+        renderPage();
+      });
+    });
+  }
+
+  // Kick off the fetch!
+  fetchNews();
 })();
 
 
