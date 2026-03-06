@@ -645,7 +645,7 @@
   if (!gridEl) return;
 
   const API_KEY = "d1aed38fd53cdcd15fabb99798f131fb";
-  const GNEWS_URL = `https://gnews.io/api/v4/top-headlines?category=technology&lang=en&max=30&apikey=${API_KEY}`;
+  const GNEWS_URL = `https://gnews.io/api/v4/top-headlines?category=technology&lang=en&max=4&apikey=${API_KEY}`;
 
   const PER_PAGE = 6;
   let allArticles = [];
