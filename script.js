@@ -652,9 +652,31 @@
   let activeCategory = "All";
   let currentPage = 1;
 
+  // Cache settings
+  const CACHE_KEY = "spiritHubNewsCache";
+  const CACHE_TIME_KEY = "spiritHubNewsTime";
+  const CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
   // 1. Fetch data from GNews
   async function fetchNews() {
     try {
+      // Check for cached data
+      const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+      const cachedData = localStorage.getItem(CACHE_KEY);
+
+      if (cachedTime && cachedData) {
+        const timeElapsed = Date.now() - parseInt(cachedTime, 10);
+        if (timeElapsed < CACHE_EXPIRATION_MS) {
+          // Use cached data
+          allArticles = JSON.parse(cachedData);
+          console.log("Using cached GNews data. Expires in:", Math.round((CACHE_EXPIRATION_MS - timeElapsed) / 60000), "minutes.");
+          renderPage();
+          return;
+        }
+      }
+
+      // No cache or expired cache, fetch fresh data
+      console.log("Fetching fresh data from GNews API...");
       const response = await fetch(GNEWS_URL);
       if (!response.ok) throw new Error("Failed to fetch news");
 
@@ -670,6 +692,11 @@
             demoCategory: categories[index % categories.length]
           };
         });
+
+        // Save to cache
+        localStorage.setItem(CACHE_KEY, JSON.stringify(allArticles));
+        localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+
         renderPage();
       }
     } catch (error) {
